@@ -1,3 +1,3 @@
 function outlayer = feedforward(inlayer, weights)
-outlayer = arrayfun(@(x) sigmoid(x), weights * inlayer);
+outlayer = 1 - arrayfun(@(x) sigmf(x, [-1, 0]), weights * inlayer);
 end
