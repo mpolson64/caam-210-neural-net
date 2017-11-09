@@ -14,13 +14,13 @@ end
 
 imagesc(digits(:, :, 88));
 
-weights1 = rand(16, 28 * 28) * 2 - 1
-weights2 = rand(10, 16) * 2 - 1
-in = trainingdata(1, 2:end)';
+weights1 = rand(16, 28 * 28) * 2 - 1;
+weights2 = rand(10, 16) * 2 - 1;
+in = trainingdata(1, 2:end)' ./ 255;
 
 mid = feedforward(in, weights1)
-out = feedforward(mid, weights2)
+out = feedforward(mid, weights2);
 
-expect = expectedvalues(:, 1, 1)
-bad = mse(out, expect)
+expect = expectedvalues(:, 1, 1);
+bad = mse(out, expect);
 end
