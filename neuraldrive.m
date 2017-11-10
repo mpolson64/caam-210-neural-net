@@ -1,19 +1,19 @@
 function neuraldrive
-[trainingdata, drawables, labels, expectedvalues] = readtraining();
+[drawables, labels, inputs, expectedvalues] = readtraining();
 
-roll = floor(rand() * 6000)
+roll = floor(rand() * 6000);
 imagesc(drawables(:, :, roll));
 title(labels(roll));
 
-weights1 = rand(16, 28 * 28) * 2 - 1;
-weights2 = rand(16, 16) * 2 - 1;
-weights3 = rand(10, 16) * 2 - 1;
-in = trainingdata(1, 2:end)' ./ 255;
+W1 = rand(16, 28 * 28) * 2 - 1;
+W2 = rand(16, 16) * 2 - 1;
+W3 = rand(10, 16) * 2 - 1;
 
-mid1 = feedforward(in, weights1);
-mid2 = feedforward(mid1, weights2);
-out = feedforward(mid2, weights3)
+a1 = inputs(:, :, roll);
+a2 = feedforward(a1, W1);
+a3 = feedforward(a2, W2);
+out = feedforward(a3, W3)
 
-expect = expectedvalues(:, 1, 1)
+expect = expectedvalues(:, :, roll)
 bad = mse(out, expect)
 end

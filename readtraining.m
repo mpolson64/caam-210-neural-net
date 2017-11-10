@@ -1,4 +1,4 @@
-function [trainingdata, drawables, labels, expectedvalues] = readtraining()
+function [drawables, labels, inputs, expectedvalues] = readtraining()
 trainingdata = csvread('mnist_train.csv');
 
 drawables = zeros(28, 28, 6000);
@@ -7,6 +7,11 @@ for i = 1:6000
 end
 
 labels = trainingdata(:, 1);
+
+inputs = zeros(784, 1, 6000);
+for i = 1:6000
+    inputs(:, :, i) = trainingdata(i, 2:end)' ./ 255;
+end
 
 expectedvalues = zeros(10, 1, 6000);
 for i = 1:6000
