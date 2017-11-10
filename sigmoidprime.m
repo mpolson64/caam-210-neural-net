@@ -1,3 +1,3 @@
 function y = sigmoidprime(x)
-y = 1 - 1 / sigmoid(x);
+y = exp(-x) / ((1 + exp(-x)) ^ 2);
 end
