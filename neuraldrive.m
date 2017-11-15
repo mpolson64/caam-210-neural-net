@@ -1,29 +1,31 @@
 function neuraldrive
-[drawables, labels, Xs, ys] = readtraining();
+[drawables_train, labels_train, Xs_train, ys_train] = readdata('mnist_train.csv');
+[drawables_test, labels_test, Xs_test, ys_test] = readdata('mnist_train.csv');
+disp('DATA READ');
 
 roll = floor(rand() * 6000);
-imagesc(drawables(:, :, roll));
-title(labels(roll));
+colormap(gray);
+axis off
+imagesc(drawables_train(:, :, roll));
+title(labels_train(roll));
 
-eta = 0.01;
+eta = 1;
 
 W1 = rand(16, 784) * 2 - 1;
 W2 = rand(16, 16) * 2 - 1;
 W3 = rand(10, 16) * 2 - 1;
 
-X = Xs(:, :, roll);
-y = ys(:, :, roll);
+disp(score(W1, W2, W3, Xs_test, labels_test));
+
+X = Xs_train(:, :, roll);
+y = ys_train(:, :, roll);
 [guess, y_] = evaluate(X, W1, W2, W3);
 disp(guess);
 disp(y_');
 
-for i = 1:10000
-[dJdW1, dJdW2, dJdW3] = backprop(X, y, W1, W2, W3);
+[W1, W2, W3] = sgd(Xs_train, ys_train, 1, W1, W2, W3, eta);
 
-W1 = W1 - eta * dJdW1;
-W2 = W2 - eta * dJdW2;
-W3 = W3 - eta * dJdW3;
-end
+disp(score(W1, W2, W3, Xs_test, labels_test));
 
 [guess, y_] = evaluate(X, W1, W2, W3);
 
@@ -65,7 +67,7 @@ W2sum = 0;
 W3sum = 0;
 
 for i = 1:size(Xs, 3)
-    [dJdW1, dJdW2, dJdW3] = backprop(Xs(:, :, i), ys(i), W1, W2, W3);
+    [dJdW1, dJdW2, dJdW3] = backprop(Xs(:, :, i), ys(:, :, i), W1, W2, W3);
     W1sum = W1sum + dJdW1;
     W2sum = W2sum + dJdW2;
     W3sum = W3sum + dJdW3;
@@ -80,12 +82,12 @@ W2 = W2 - eta * W2nudge;
 W3 = W3 - eta * W3nudge;
 end
 
-function [W1, W2, W3] = sgd(Xs, ys, batchsize, W1, W2, W3, delta)
+function [W1, W2, W3] = sgd(Xs, ys, batchsize, W1, W2, W3, eta)
 for i = 1:(floor(size(Xs, 3) / batchsize) - batchsize)
     Xbatch = Xs(:, :, batchsize * i + (1:batchsize));
     ybatch = ys(:, :, batchsize * i + (1:batchsize));
     
-    [W1, W2, W3] = trainominibatch(Xbatch, ybatch, W1, W2, W3, delta);
+    [W1, W2, W3] = trainominibatch(Xbatch, ybatch, W1, W2, W3, eta);
 end
 end
 
@@ -103,7 +105,7 @@ end
 
 function val = score(W1, W2, W3, Xs, labels)
 correct = 0;
-for i = 1:1000
+for i = 1:size(Xs, 3)
     guess = evaluate(Xs(:, :, i), W1, W2, W3);
     
     if guess == labels(i)
@@ -111,11 +113,11 @@ for i = 1:1000
     end
 end
 
-val = correct / length(Xs);
+val = correct / size(Xs, 3);
 end
 
-function [drawables, labels, inputs, expectedvalues] = readtraining()
-trainingdata = csvread('mnist_train.csv');
+function [drawables, labels, inputs, expectedvalues] = readdata(filename)
+trainingdata = csvread(filename);
 
 drawables = zeros(28, 28, 6000);
 for i = 1:6000
