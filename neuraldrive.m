@@ -3,29 +3,30 @@ function neuraldrive
 [drawables_test, labels_test, Xs_test, ys_test] = readdata('mnist_train.csv');
 disp('DATA READ');
 
-roll = floor(rand() * 6000);
+roll = floor(rand() * 6000) + 1;
 colormap(gray);
-axis off
 imagesc(drawables_train(:, :, roll));
+axis off
 title(labels_train(roll));
 
+batchsize = 2;
 eta = 1;
 
 W1 = rand(16, 784) * 2 - 1;
 W2 = rand(16, 16) * 2 - 1;
 W3 = rand(10, 16) * 2 - 1;
 
-disp(score(W1, W2, W3, Xs_test, labels_test));
-
 X = Xs_train(:, :, roll);
-y = ys_train(:, :, roll);
 [guess, y_] = evaluate(X, W1, W2, W3);
 disp(guess);
 disp(y_');
 
-[W1, W2, W3] = sgd(Xs_train, ys_train, 1, W1, W2, W3, eta);
+%[W1, W2, W3] = sgd(Xs_train, ys_train, batchsize, W1, W2, W3, eta);
 
-disp(score(W1, W2, W3, Xs_test, labels_test));
+[W1, W2, W3, scores] = scoredsgd(Xs_train, ys_train, 1, W1, W2, W3, eta, Xs_test, labels_test, 50, 50);
+figure();
+plot(scores);
+title('Score: ' + string(score(W1, W2, W3, Xs_test, labels_test, 6000)));
 
 [guess, y_] = evaluate(X, W1, W2, W3);
 
@@ -91,6 +92,21 @@ for i = 1:(floor(size(Xs, 3) / batchsize) - batchsize)
 end
 end
 
+function [W1, W2, W3, scores] = scoredsgd(Xs_train, ys_train, batchsize, W1, W2, W3, eta, Xs_test, labels_test, samplesize, res)
+scores = zeros(1, floor(batchsize / res));
+
+for i = 1:(floor(size(Xs_train, 3) / batchsize) - batchsize)
+    Xbatch = Xs_train(:, :, batchsize * i + (1:batchsize));
+    ybatch = ys_train(:, :, batchsize * i + (1:batchsize));
+    
+    [W1, W2, W3] = trainominibatch(Xbatch, ybatch, W1, W2, W3, eta);
+    
+    if mod(i, res) == 0
+       scores(i / res) = score(W1, W2, W3, Xs_test, labels_test, samplesize);
+    end
+end
+end
+
 function y = sigmoid(x)
 y = 1 / (exp(-x) + 1);
 end
@@ -103,17 +119,18 @@ function J = cost(y_, y)
 J = 0.5 * sum((y - y_) .^ 2);
 end
 
-function val = score(W1, W2, W3, Xs, labels)
+function val = score(W1, W2, W3, Xs, labels, samplesize)
 correct = 0;
-for i = 1:size(Xs, 3)
-    guess = evaluate(Xs(:, :, i), W1, W2, W3);
+for i = 1:samplesize
+    roll = floor(rand() * samplesize) + 1;
+    guess = evaluate(Xs(:, :, roll), W1, W2, W3);
     
-    if guess == labels(i)
+    if guess == labels(roll)
         correct = correct + 1;
     end
 end
 
-val = correct / size(Xs, 3);
+val = correct / samplesize;
 end
 
 function [drawables, labels, inputs, expectedvalues] = readdata(filename)
