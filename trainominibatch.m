@@ -1,11 +1,9 @@
-%function trainminibatch performs backpropagation and stochastic gradient descent on the Neural Network
+%function trainminibatch performs backpropagation on the Neural Network
 %    for a small batch of training images. 
 %Inputs: W1, W2, and W3 are the three connecting weights matrices of the Neural Network.
 %   eta is the learning rate of the Neural Network. Xs and ys represent the small batch of 
-%   images that the Neural Network uses to perform backpropagation and stochastic gradient descent
-%   upon.
-%Outputs: W1, W2, and W3 are the trained weights matrices after backpropagation and stochastic gradient
-%   descent.
+%   images that the Neural Network uses to perform backpropagation upon.
+%Outputs: W1, W2, and W3 are the trained weights matrices after backpropagation.
 function [W1, W2, W3] = trainominibatch(Xs, ys, W1, W2, W3, eta)
 W1sum = 0;
 W2sum = 0;
