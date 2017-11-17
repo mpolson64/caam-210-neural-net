@@ -6,5 +6,5 @@
 %     For purposes of making the calculus of the Neural Network easier, the cost function
 %     performs half squared error, instead of more traditional mean squared error. 
 function J = cost(y_, y)
-J = 0.5 * sum((y - y_) .^ 2);
+J = 0.5 * sum((y - y_) .^ 2); %notice use of half-squared error instead of MSE
 end
