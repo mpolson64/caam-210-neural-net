@@ -2,7 +2,7 @@
 %     stochastic gradient descent.
 %Inputs: Xs_train and ys_train are inputs of the image data for the Network to train upon. W1, W2, and W3 are the weights matrices
 %     eta is the learning rate. Xs_test is test images for the Neural Network to be tested against. labels_test are the actual digit
-%     values of the test images.
+%     values of the test images. samplesize is the number of images to test. rev is the how often the score is calculated.
 %Outputs: W1, W2, and W3 are the trained weights matrices of the system. scores is a number representing the improvement of the Network
 %     upon training. 
 function [W1, W2, W3, scores] = scoredsgd(Xs_train, ys_train, batchsize, W1, W2, W3, eta, Xs_test, labels_test, samplesize, res)
