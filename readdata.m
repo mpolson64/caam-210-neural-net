@@ -1,9 +1,22 @@
+%Function readdata reads the training and testing image data sets for the Neural Network.  
+%   Furthermore, readdata maninpulates the training and testing data such that it separates the
+%   raw data into data that can render into images, the number position of the image in the data set,
+%   the data that is actually sent into the neural network, and the number the image actually represents.
+%Inputs: input filename takes in a file. For the purposes of this project, filename is 
+%   a .csv file that contains 6000 training or 6000 test images.
+%Outputs: drawtables is an output that sorts all 6000 images into smaller data sets that can be
+%   rendered into images of a a given handwritten digit. Each part of drawtables contains
+%   a 28x28 pixel image of that digit. labels corresponds to the number in which a given digit appears
+%   in the data set (ie labels ranges from 1-6000). inputs converts each image into data that can be interpreted
+%   by the Neural Network. expectedvalues is a matrix that contains the actual values each image in the data set
+%   represents. 
+
 function [drawables, labels, inputs, expectedvalues] = readdata(filename)
 trainingdata = csvread(filename);
 
 drawables = zeros(28, 28, 6000);
 for i = 1:6000
-    drawables(:, :, i) = reshape(trainingdata(i, 2:end), [28, 28])';
+    drawables(:, :, i) = reshape(trainingdata(i, 2:end), [28, 28])'; %reshapes into 28x28 pixel images
 end
 
 labels = trainingdata(:, 1);
