@@ -16,7 +16,7 @@ trainingdata = csvread(filename);
 
 drawables = zeros(28, 28, 6000);
 for i = 1:6000
-    drawables(:, :, i) = reshape(trainingdata(i, 2:end), [28, 28])';
+    drawables(:, :, i) = reshape(trainingdata(i, 2:end), [28, 28])'; %reshapes into 28x28 pixel images
 end
 
 labels = trainingdata(:, 1);
