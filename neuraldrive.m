@@ -1,3 +1,9 @@
+%function neuraldrive is a driver function that combines all necessary functions 
+%     to train and score a handwritten digit recognition Neural Network. 
+%Input: none (this is a driver)
+%Output: none (this is a driver)
+%Note: after creating the GUI to demonstrate the neural network, neuraldrive was no longer used.
+%     This driver was only used in verifying that the network trained successfully.
 function neuraldrive
 [drawables_train, labels_train, Xs_train, ys_train] = readdata('mnist_train.csv');
 [~, labels_test, Xs_test, ~] = readdata('mnist_train.csv');
