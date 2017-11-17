@@ -1,4 +1,4 @@
-%Function feedfoward passes the activation levels of a previous layer of a neural network
+%Function feedfoward passes the activation levels of a previous layer of the neural network
 %     through a weights matrix and returns the activations of the next layer of the neural network.
 %Inputs: a is a matrix of the activation levels of a given layer of the neural network. W is the weights matrix
 %     a must pass through to determine the activation levels of the next layer of the neural network.
